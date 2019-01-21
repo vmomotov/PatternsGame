@@ -7,3 +7,8 @@ cocos2d/cocos/editor-support/spine/proj.win32/Debug.win32/
 cocos2d/cocos/editor-support/spine/proj.win32/Release.win32/
 cocos2d/cocos/editor-support/spine/Release.win32/
 cocos2d/cocos/editor-support/spine/Debug.win32/
+cocos2d/external/Box2D/proj.win32/Debug.win32/
+cocos2d/external/recast/proj.win32/Debug.win32/
+cocos2d/cocos/Debug.win32/
+cocos2d/external/Box2D/Debug.win32/
+cocos2d/external/recast/Debug.win32/
