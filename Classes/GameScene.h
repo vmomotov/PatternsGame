@@ -2,9 +2,14 @@
 
 #include "cocos2d.h"
 
+//forward declarations
+class GridController;
+
 class GameScene : public cocos2d::Scene
 {
 public:
+	GameScene();
+	virtual ~GameScene();
 	static cocos2d::Scene* createScene();
 
 	virtual bool init();
@@ -13,4 +18,7 @@ public:
 	CREATE_FUNC(GameScene);
 
 	void layoutTiles();
+
+private:
+	GridController* m_pGridController;
 };

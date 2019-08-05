@@ -3,6 +3,8 @@
 #include <vector>
 #include "cocos2d.h"
 
+class GameScene;
+
 class GameTile : public cocos2d::Node
 {
 public:
@@ -16,6 +18,7 @@ class GridController
 {
 public:
 	GridController();
+	GridController(GameScene* inputScene);
 	~GridController();
 
 	void generateArray();
@@ -26,4 +29,6 @@ private:
 	std::vector<std::vector<int> > m_gridValuesArray;
 
 	std::vector<std::vector<GameTile*> > m_gridTiles;
+
+	GameScene* m_pParentScene;
 };
