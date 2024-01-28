@@ -12,3 +12,5 @@ cocos2d/external/recast/proj.win32/Debug.win32/
 cocos2d/cocos/Debug.win32/
 cocos2d/external/Box2D/Debug.win32/
 cocos2d/external/recast/Debug.win32/
+
+build/
