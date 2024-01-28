@@ -59,11 +59,13 @@ list(APPEND GAME_SOURCE
      Classes/AppDelegate.cpp
      Classes/GameScene.cpp
 	 Classes/GridController.cpp
+	 Classes/GameTile.cpp
      )
 list(APPEND GAME_HEADER
      Classes/AppDelegate.h
      Classes/GameScene.h
 	 Classes/GridController.h
+	 Classes/GameTile.h
      )
 
 if(ANDROID)

@@ -5,14 +5,9 @@
 
 class GameScene;
 
-class GameTile : public cocos2d::Node
-{
-public:
-	GameTile(int nValue);
-private:
-	cocos2d::Sprite* m_pCoverSprite;
-	cocos2d::Sprite* m_pMainSprite;
-};
+#include "ui/UIButton.h"
+#define GameTile cocos2d::ui::Button
+
 
 class GridController
 {

@@ -1,10 +1,6 @@
 #include "GridController.h"
 #include "GameScene.h"
-
-GameTile::GameTile(int value)
-{
-
-}
+#include "GameTile.h"
 
 USING_NS_CC;
 
@@ -13,15 +9,14 @@ const int g_nMaxGridSize = 5;
 
 GridController::GridController()
 	: m_gridTiles(g_nMaxGridSize, std::vector<GameTile*>(g_nMaxGridSize, nullptr))
+	, m_pParentScene(nullptr)
 {
-	int a = 0;
 }
 
 GridController::GridController(GameScene* pParentScene)
 	: m_pParentScene(pParentScene)
 	, m_gridTiles(g_nMaxGridSize, std::vector<GameTile*>(g_nMaxGridSize, nullptr))
 {
-	//GridController();
 }
 
 GridController::~GridController()
@@ -46,9 +41,6 @@ void GridController::generateArray()
 
 void GridController::generateTiles()
 {
-	SpriteFrameCache* pSpriteCache = SpriteFrameCache::getInstance();
-	SpriteFrame* pSpriteBackgroundTile = pSpriteCache->getSpriteFrameByName("tile_background.png");
-
 	Size visibleSize = Director::getInstance()->getVisibleSize();
 	Vec2 origin = Director::getInstance()->getVisibleOrigin();
 	Vec2 center = Vec2(visibleSize.width / 2 + origin.x, visibleSize.height / 2 + origin.y);
@@ -61,24 +53,23 @@ void GridController::generateTiles()
 	for (int i = - halfGridSize; i <= halfGridSize; ++i)
 		for (int j = -halfGridSize; j <= halfGridSize; ++j)
 		{
-			Sprite* pSprite = Sprite::createWithSpriteFrame(pSpriteBackgroundTile);
+			GameTile* pTile = (cocos2d::ui::Button::create("tile_background.png", "gem_1.png", "tile_black.png", cocos2d::ui::Widget::TextureResType::PLIST));
+			pTile->addTouchEventListener([&](Ref* sender, cocos2d::ui::Widget::TouchEventType type) {
+				if (type == cocos2d::ui::Widget::TouchEventType::ENDED) {
+					cocos2d::ui::Button* pButton = dynamic_cast<cocos2d::ui::Button*>(sender);
+					if (pButton != nullptr) {
+						pButton->setBright(false);
+					}
+				}
+			});
 
-			pSprite->setScale(scale);
+			pTile->setScale(scale);
 
-			pSprite->setPosition(Vec2(center.x + i * (gapSize + scale * pSprite->getContentSize().width),
-				center.y + j * (gapSize + scale * pSprite->getContentSize().height)));
+			pTile->setPosition(Vec2(center.x + i * (gapSize + scale * pTile->getContentSize().width),
+				center.y + j * (gapSize + scale * pTile->getContentSize().height)));
 
-			if (m_pParentScene != nullptr) { 
-				m_pParentScene->addChild(pSprite, 0);
+			if (m_pParentScene != nullptr) {
+				m_pParentScene->addChild(pTile, 0);
 			}
-				
 		}
-
-	/*
-	for (int i = 0; i < g_nMaxGridSize; ++i)
-		for (int j = 0; j < g_nMaxGridSize; ++j)
-		{
-			m_gridTiles[i][j] = new GameTile(m_gridValuesArray[i][j]);
-		}
-	*/
 }
