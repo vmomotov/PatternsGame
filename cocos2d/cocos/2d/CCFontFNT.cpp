@@ -1,6 +1,7 @@
 /****************************************************************************
  Copyright (c) 2013      Zynga Inc.
- Copyright (c) 2013-2017 Chukong Technologies Inc.
+ Copyright (c) 2013-2016 Chukong Technologies Inc.
+ Copyright (c) 2017-2018 Xiamen Yaji Software Co., Ltd.
  
  http://www.cocos2d-x.org
 
@@ -221,7 +222,7 @@ BMFontConfiguration::~BMFontConfiguration()
     CC_SAFE_DELETE(_characterSet);
 }
 
-std::string BMFontConfiguration::description(void) const
+std::string BMFontConfiguration::description() const
 {
     return StringUtils::format(
         "<BMFontConfiguration = " CC_FORMAT_PRINTF_SIZE_T " | Glphys:%d Kernings:%d | Image = %s>",
@@ -616,7 +617,7 @@ FontFNT * FontFNT::create(const std::string& fntFilePath, const Vec2& imageOffse
     }
     
     FontFNT *tempFont =  new FontFNT(newConf,imageOffset);
-    tempFont->setFontSize(newConf->_fontSize);
+    tempFont->setFontSize((float)newConf->_fontSize);
     if (!tempFont)
     {
         return nullptr;
@@ -712,7 +713,7 @@ FontAtlas * FontFNT::createFontAtlas()
     
     // common height
     int originalFontSize = _configuration->_fontSize;
-    float originalLineHeight = _configuration->_commonHeight;
+    float originalLineHeight = (float)_configuration->_commonHeight;
     float factor = 0.0f;
     if (std::abs(_fontSize - originalFontSize) < FLT_EPSILON) {
         factor = 1.0f;

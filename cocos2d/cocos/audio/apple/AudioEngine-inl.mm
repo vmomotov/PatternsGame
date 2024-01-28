@@ -1,5 +1,6 @@
 /****************************************************************************
- Copyright (c) 2014-2017 Chukong Technologies Inc.
+ Copyright (c) 2014-2016 Chukong Technologies Inc.
+ Copyright (c) 2017-2018 Xiamen Yaji Software Co., Ltd.
 
  http://www.cocos2d-x.org
 
@@ -24,9 +25,6 @@
 
 #define LOG_TAG "AudioEngine-inl.mm"
 
-#include "platform/CCPlatformConfig.h"
-#if CC_TARGET_PLATFORM == CC_PLATFORM_IOS || CC_TARGET_PLATFORM == CC_PLATFORM_MAC
-
 #include "audio/apple/AudioEngine-inl.h"
 
 #import <OpenAL/alc.h>
@@ -38,8 +36,11 @@
 #include "base/CCScheduler.h"
 #include "base/ccUtils.h"
 
+#if CC_TARGET_PLATFORM == CC_PLATFORM_IOS
+#import <UIKit/UIKit.h>
+#endif
+
 using namespace cocos2d;
-using namespace cocos2d::experimental;
 
 static ALCdevice* s_ALDevice = nullptr;
 static ALCcontext* s_ALContext = nullptr;
@@ -153,6 +154,11 @@ void AudioEngineInterruptionListenerCallback(void* user_data, UInt32 interruptio
                 ALOGD("AVAudioSessionInterruptionTypeEnded, application == UIApplicationStateActive, alcMakeContextCurrent(s_ALContext)");
                 NSError *error = nil;
                 [[AVAudioSession sharedInstance] setActive:YES error:&error];
+                if(error != nil){
+                    ALOGE("AVAudioSessionInterruptionTypeEnded, AVAudioSession setActive fail, %d",(int)error.code);
+                    return;
+                }
+                
                 alcMakeContextCurrent(s_ALContext);
                 if (Director::getInstance()->isPaused())
                 {
@@ -191,6 +197,10 @@ void AudioEngineInterruptionListenerCallback(void* user_data, UInt32 interruptio
                 return;
             }
             [[AVAudioSession sharedInstance] setActive:YES error:&error];
+            if(error != nil){
+                ALOGE("UIApplicationDidBecomeActiveNotification, AVAudioSession setActive fail, %d",(int)error.code);
+                return;
+            }
             alcMakeContextCurrent(s_ALContext);
         }
         else if (isAudioSessionInterrupted)
@@ -438,7 +448,7 @@ int AudioEngineImpl::play2d(const std::string &filePath ,bool loop ,float volume
 
 void AudioEngineImpl::_play2d(AudioCache *cache, int audioID)
 {
-    //Note: It may bn in sub thread or main thread :(
+    //Note: It maybe in sub thread or main thread :(
     if (!*cache->_isDestroyed && cache->_state == AudioCache::State::READY)
     {
         _threadMutex.lock();
@@ -662,7 +672,7 @@ void AudioEngineImpl::update(float dt)
             std::string filePath;
             if (player->_finishCallbak) {
                 auto& audioInfo = AudioEngine::_audioIDInfoMap[audioID];
-                filePath = *audioInfo.filePath;
+                filePath = audioInfo.filePath;
             }
 
             AudioEngine::remove(audioID);
@@ -697,5 +707,3 @@ void AudioEngineImpl::uncacheAll()
 {
     _audioCaches.clear();
 }
-
-#endif

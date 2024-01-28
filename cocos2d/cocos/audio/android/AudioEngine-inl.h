@@ -1,5 +1,6 @@
 /****************************************************************************
- Copyright (c) 2014-2017 Chukong Technologies Inc.
+ Copyright (c) 2014-2016 Chukong Technologies Inc.
+ Copyright (c) 2017-2018 Xiamen Yaji Software Co., Ltd.
 
  http://www.cocos2d-x.org
 
@@ -41,8 +42,6 @@ NS_CC_BEGIN
 
 class EventCustom;
 class EventListener;
-
-namespace experimental {
 
 class IAudioPlayer;
 class AudioPlayerProvider;
@@ -102,7 +101,7 @@ private:
 };
 
 #endif // __AUDIO_ENGINE_INL_H_
- }
+
 NS_CC_END
 
 #endif

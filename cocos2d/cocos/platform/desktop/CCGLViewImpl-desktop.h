@@ -1,6 +1,7 @@
 /****************************************************************************
 Copyright (c) 2010-2012 cocos2d-x.org
-Copyright (c) 2013-2017 Chukong Technologies Inc.
+Copyright (c) 2013-2016 Chukong Technologies Inc.
+Copyright (c) 2017-2018 Xiamen Yaji Software Co., Ltd.
 
 http://www.cocos2d-x.org
 
@@ -23,9 +24,9 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 THE SOFTWARE.
 ****************************************************************************/
 
-#ifndef __CC_EGLViewIMPL_DESKTOP_H__
-#define __CC_EGLViewIMPL_DESKTOP_H__
+#pragma once
 
+#include "platform/CCGL.h" 
 #include "base/CCRef.h"
 #include "platform/CCCommon.h"
 #include "platform/CCGLView.h"
@@ -95,6 +96,12 @@ public:
     virtual void setFrameSize(float width, float height) override;
     virtual void setIMEKeyboardState(bool bOpen) override;
 
+#if CC_ICON_SET_SUPPORT
+    virtual void setIcon(const std::string& filename) const override;
+    virtual void setIcon(const std::vector<std::string>& filelist) const override;
+    virtual void setDefaultIcon() const override;
+#endif /* CC_ICON_SET_SUPPORT */
+
     /*
      * Set zoom factor for frame. This method is for debugging big resolution (e.g.new ipad) app on desktop.
      */
@@ -119,17 +126,18 @@ public:
     
 #if (CC_TARGET_PLATFORM == CC_PLATFORM_MAC)
     id getCocoaWindow() override { return glfwGetCocoaWindow(_mainWindow); }
+    id getNSGLContext() override { return glfwGetNSGLContext(_mainWindow); } // stevetranby: added
 #endif // #if (CC_TARGET_PLATFORM == CC_PLATFORM_MAC)
 
 protected:
     GLViewImpl(bool initglfw = true);
     virtual ~GLViewImpl();
 
+    bool initGlew();
+
     bool initWithRect(const std::string& viewName, Rect rect, float frameZoomFactor, bool resizable);
     bool initWithFullScreen(const std::string& viewName);
     bool initWithFullscreen(const std::string& viewname, const GLFWvidmode &videoMode, GLFWmonitor *monitor);
-
-    bool initGlew();
 
     void updateFrameSize();
 
@@ -220,16 +228,17 @@ public:
             _view->onGLFWWindowPosCallback(windows, x, y);
     }
 
-    static void onGLFWframebuffersize(GLFWwindow* window, int w, int h)
-    {
-        if (_view)
-            _view->onGLFWframebuffersize(window, w, h);
-    }
-
     static void onGLFWWindowSizeFunCallback(GLFWwindow *window, int width, int height)
     {
         if (_view)
             _view->onGLFWWindowSizeFunCallback(window, width, height);
+    }
+
+
+    static void onGLFWframebuffersize(GLFWwindow *window, int width, int height)
+    {
+        if (_view)
+            _view->onGLFWframebuffersize(window, width, height);
     }
 
     static void setGLViewImpl(GLViewImpl* view)
@@ -253,10 +262,9 @@ public:
         }
     }
 
+
 private:
     static GLViewImpl* _view;
 };
 
 NS_CC_END   // end of namespace   cocos2d
-
-#endif  // end of __CC_EGLViewImpl_DESKTOP_H__
